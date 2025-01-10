@@ -1,5 +1,5 @@
 import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
-import { BindModal } from "./ReactView";
+import { BindModal } from "./BindModal";
 
 type MOCFile = {
   file: TFile;
