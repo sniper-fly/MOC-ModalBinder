@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { TFile } from "obsidian";
+import { useState, useEffect, StrictMode } from "react";
+import { App, Modal, TFile } from "obsidian";
+import { createRoot, Root } from "react-dom/client";
 
 type MOCFile = {
   file: TFile;
@@ -7,13 +8,34 @@ type MOCFile = {
   selected: boolean;
 };
 
-type ReactViewProps = {
+type ReactModalProps = {
   files: MOCFile[];
   onSelect: (selectedFiles: MOCFile[]) => void;
   onClose: () => void;
 };
 
-export function ReactView({ files, onSelect, onClose }: ReactViewProps) {
+export class BindModal extends Modal {
+  root: Root | null = null;
+
+  constructor(app: App, public props: ReactModalProps) {
+    super(app);
+  }
+
+  async onOpen() {
+    this.root = createRoot(this.contentEl.createDiv());
+    this.root.render(
+      <StrictMode>
+        <ReactModal {...this.props} />
+      </StrictMode>
+    );
+  }
+
+  async onClose() {
+    this.root?.unmount();
+  }
+}
+
+function ReactModal({ files, onSelect, onClose }: ReactModalProps) {
   const [filter, setFilter] = useState("");
   const [filteredFiles, setFilteredFiles] = useState(files);
   const [selectedIndex, setSelectedIndex] = useState(0);

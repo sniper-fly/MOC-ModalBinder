@@ -1,14 +1,11 @@
-import {
-  App,
-  Editor,
-  MarkdownView,
-  Modal,
-  Notice,
-  Plugin,
-  PluginSettingTab,
-  Setting,
-  TFile,
-} from "obsidian";
+import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
+import { BindModal } from "./ReactView";
+
+type MOCFile = {
+  file: TFile;
+  tags: string[];
+  selected: boolean;
+};
 
 type MOCModalBinderSettings = {
   autoBind: boolean;
@@ -49,7 +46,46 @@ export default class MOCModalBinder extends Plugin {
   }
 
   async openMOCSelector(file?: TFile) {
-    // TODO: Implement modal opening logic
+    // Get all files with MOC tag
+    const mocFiles = this.app.vault.getMarkdownFiles().filter((f) => {
+      const cache = this.app.metadataCache.getFileCache(f);
+      return cache?.frontmatter?.tags?.includes("MOC");
+    });
+
+    // Map to MOCFile format
+    const mappedFiles: MOCFile[] = mocFiles.map((f) => {
+      const cache = this.app.metadataCache.getFileCache(f);
+      return {
+        file: f,
+        tags:
+          cache?.frontmatter?.tags?.filter((t: string) => t !== "MOC") || [],
+        selected: false,
+      };
+    });
+    new BindModal(this.app, {
+      files: mappedFiles,
+      onSelect: async (selectedFiles) => {
+        if (file) {
+          // Add link to selected MOC files
+          for (const mocFile of selectedFiles) {
+            await this.app.vault.process(mocFile.file, (data) => {
+              return data + `\n- [[${file.basename}]]`;
+            });
+          }
+
+          // Add tags to new file
+          const allTags = selectedFiles.flatMap((f) => f.tags);
+          const uniqueTags = [...new Set(allTags)];
+          await this.app.vault.process(file, (data) => {
+            const frontmatter = `---\ntags: [${uniqueTags
+              .map((t) => `"${t}"`)
+              .join(", ")}]\n---\n`;
+            return frontmatter + data;
+          });
+        }
+      },
+      onClose: () => {},
+    }).open();
   }
 
   onunload() {}
