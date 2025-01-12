@@ -106,8 +106,6 @@ export default class MOCModalBinder extends Plugin {
     new BindModal(this.app, {
       files: mappedFiles,
       onSelect: async (selectedFiles) => {
-        if (selectedFiles.length === 0) return;
-
         // Add link to selected MOC files
         for (const mocFile of selectedFiles) {
           await insertLink(mocFile.file, file);
@@ -115,7 +113,6 @@ export default class MOCModalBinder extends Plugin {
         // Add tags to new file
         const allTags = selectedFiles.flatMap((f) => f.tags);
         const uniqueTags = [...new Set(allTags)];
-        if (uniqueTags.length === 0) return;
 
         await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
           frontmatter.tags = uniqueTags;
