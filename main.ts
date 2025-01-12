@@ -1,4 +1,11 @@
-import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
+import {
+  App,
+  Plugin,
+  PluginSettingTab,
+  Setting,
+  TFile,
+  getFrontMatterInfo,
+} from "obsidian";
 import { BindModal } from "./BindModal";
 
 type MOCFile = {
@@ -27,6 +34,29 @@ export default class MOCModalBinder extends Plugin {
       name: "Open MOC Selector",
       callback: () => {
         this.openMOCSelector();
+      },
+    });
+
+    this.addCommand({
+      id: "test",
+      name: "Test",
+      callback: async () => {
+        console.log("Test");
+        const mocFiles = this.app.vault.getMarkdownFiles().filter((f) => {
+          const cache = this.app.metadataCache.getFileCache(f);
+          return cache?.frontmatter?.tags?.includes("MOC");
+        });
+        const file = this.app.metadataCache.getFileCache(mocFiles[0]);
+        const content = await this.app.vault.read(mocFiles[0]);
+        const info = getFrontMatterInfo(content);
+        console.log(file, info);
+        const contentStart = info.contentStart;
+        const modifiedContent =
+          content.slice(0, contentStart) +
+          "hello world\n" +
+          content.slice(contentStart);
+        console.log(modifiedContent);
+        await this.app.vault.modify(mocFiles[0], modifiedContent);
       },
     });
 
