@@ -86,73 +86,69 @@ export default class MOCModalBinder extends Plugin {
   }
 
   async openMOCSelector(file?: TFile) {
-    try {
-      // Get all files with MOC tag
-      const mocFiles = this.app.vault.getMarkdownFiles().filter((f) => {
-        const cache = this.app.metadataCache.getFileCache(f);
-        return cache?.frontmatter?.tags?.includes("MOC");
-      });
+    // Get all files with MOC tag
+    const mocFiles = this.app.vault.getMarkdownFiles().filter((f) => {
+      const cache = this.app.metadataCache.getFileCache(f);
+      return cache?.frontmatter?.tags?.includes("MOC");
+    });
 
-      if (mocFiles.length === 0) {
-        console.warn("No MOC files found");
-        return;
-      }
-
-      // Map to MOCFile format
-      const mappedFiles: MOCFile[] = mocFiles.map((f) => {
-        const cache = this.app.metadataCache.getFileCache(f);
-        return {
-          file: f,
-          tags:
-            cache?.frontmatter?.tags?.filter((t: string) => t !== "MOC") || [],
-          selected: false,
-        };
-      });
-
-      new BindModal(this.app, {
-        files: mappedFiles,
-        onSelect: async (selectedFiles) => {
-          if (!file || selectedFiles.length === 0) return;
-
-          try {
-            // Add link to selected MOC files
-            for (const mocFile of selectedFiles) {
-              await this.app.vault.process(mocFile.file, (data) => {
-                if (!data.includes(`[[${file.basename}]]`)) {
-                  return data + `\n- [[${file.basename}]]`;
-                }
-                return data;
-              });
-            }
-
-            // Add tags to new file
-            const allTags = selectedFiles.flatMap((f) => f.tags);
-            const uniqueTags = [...new Set(allTags)];
-            if (uniqueTags.length > 0) {
-              await this.app.vault.process(file, (data) => {
-                // Check if frontmatter already exists
-                const hasFrontmatter = data.startsWith("---");
-                const frontmatter = `---\ntags: [${uniqueTags
-                  .map((t) => `"${t}"`)
-                  .join(", ")}]\n---\n`;
-
-                return hasFrontmatter
-                  ? data.replace(/^---\n([\s\S]*?\n)---\n/, frontmatter)
-                  : frontmatter + data;
-              });
-            }
-          } catch (error) {
-            console.error("Error processing files:", error);
-          }
-        },
-        onClose: () => {
-          if (!file) return;
-          this.app.workspace.getLeaf().openFile(file);
-        },
-      }).open();
-    } catch (error) {
-      console.error("Error opening MOC selector:", error);
+    if (mocFiles.length === 0) {
+      console.warn("No MOC files found");
+      return;
     }
+
+    // Map to MOCFile format
+    const mappedFiles: MOCFile[] = mocFiles.map((f) => {
+      const cache = this.app.metadataCache.getFileCache(f);
+      return {
+        file: f,
+        tags:
+          cache?.frontmatter?.tags?.filter((t: string) => t !== "MOC") || [],
+        selected: false,
+      };
+    });
+
+    new BindModal(this.app, {
+      files: mappedFiles,
+      onSelect: async (selectedFiles) => {
+        if (!file || selectedFiles.length === 0) return;
+
+        try {
+          // Add link to selected MOC files
+          for (const mocFile of selectedFiles) {
+            await this.app.vault.process(mocFile.file, (data) => {
+              if (!data.includes(`[[${file.basename}]]`)) {
+                return data + `\n- [[${file.basename}]]`;
+              }
+              return data;
+            });
+          }
+
+          // Add tags to new file
+          const allTags = selectedFiles.flatMap((f) => f.tags);
+          const uniqueTags = [...new Set(allTags)];
+          if (uniqueTags.length > 0) {
+            await this.app.vault.process(file, (data) => {
+              // Check if frontmatter already exists
+              const hasFrontmatter = data.startsWith("---");
+              const frontmatter = `---\ntags: [${uniqueTags
+                .map((t) => `"${t}"`)
+                .join(", ")}]\n---\n`;
+
+              return hasFrontmatter
+                ? data.replace(/^---\n([\s\S]*?\n)---\n/, frontmatter)
+                : frontmatter + data;
+            });
+          }
+        } catch (error) {
+          console.error("Error processing files:", error);
+        }
+      },
+      onClose: () => {
+        if (!file) return;
+        this.app.workspace.getLeaf().openFile(file);
+      },
+    }).open();
   }
 
   onunload() {}
