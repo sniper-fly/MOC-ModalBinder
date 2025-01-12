@@ -113,18 +113,11 @@ export default class MOCModalBinder extends Plugin {
         // Add tags to new file
         const allTags = selectedFiles.flatMap((f) => f.tags);
         const uniqueTags = [...new Set(allTags)];
-        if (uniqueTags.length > 0) {
-          await this.app.vault.process(file, (data) => {
-            // Check if frontmatter already exists
-            const hasFrontmatter = data.startsWith("---");
-            const frontmatter = `---\ntags: [${uniqueTags
-              .map((t) => `"${t}"`)
-              .join(", ")}]\n---\n`;
-            return hasFrontmatter
-              ? data.replace(/^---\n([\s\S]*?\n)---\n/, frontmatter)
-              : frontmatter + data;
-          });
-        }
+        if (uniqueTags.length === 0) return;
+
+        await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+          frontmatter.tags = uniqueTags;
+        });
       },
       onClose: () => {
         if (!file) return;
