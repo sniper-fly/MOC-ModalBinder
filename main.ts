@@ -7,6 +7,7 @@ import {
   getFrontMatterInfo,
 } from "obsidian";
 import { BindModal } from "./BindModal";
+import { insertLink } from "insertLink";
 
 type MOCFile = {
   file: TFile;
@@ -46,27 +47,18 @@ export default class MOCModalBinder extends Plugin {
         //   const cache = this.app.metadataCache.getFileCache(f);
         //   return cache?.frontmatter?.tags?.includes("MOC");
         // });
-        // const file = this.app.metadataCache.getFileCache(mocFiles[0]);
-        // const content = await this.app.vault.read(mocFiles[0]);
-        // const info = getFrontMatterInfo(content);
-        // console.log(file, info);
-        // const contentStart = info.contentStart;
-        // const modifiedContent =
-        //   content.slice(0, contentStart) +
-        //   "hello world\n" +
-        //   content.slice(contentStart);
-        // console.log(modifiedContent);
-        // await this.app.vault.modify(mocFiles[0], modifiedContent);
 
         // Untitled 6 という名前のファイルを検索し、TFile オブジェクトを取得
         const file = this.app.vault
           .getMarkdownFiles()
           .find((f) => f.basename === "Untitled 6");
         if (!file) return;
-        await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-          // frontmatter.tags = ["test"];
-          delete frontmatter.tags;
-        });
+        insertLink(file, file);
+
+        // await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+        //   // frontmatter.tags = ["test"];
+        //   delete frontmatter.tags;
+        // });
       },
     });
 
@@ -115,12 +107,7 @@ export default class MOCModalBinder extends Plugin {
 
         // Add link to selected MOC files
         for (const mocFile of selectedFiles) {
-          await this.app.vault.process(mocFile.file, (data) => {
-            if (!data.includes(`[[${file.basename}]]`)) {
-              return data + `\n- [[${file.basename}]]`;
-            }
-            return data;
-          });
+          await insertLink(mocFile.file, file);
         }
 
         // Add tags to new file
