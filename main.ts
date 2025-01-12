@@ -42,21 +42,31 @@ export default class MOCModalBinder extends Plugin {
       name: "Test",
       callback: async () => {
         console.log("Test");
-        const mocFiles = this.app.vault.getMarkdownFiles().filter((f) => {
-          const cache = this.app.metadataCache.getFileCache(f);
-          return cache?.frontmatter?.tags?.includes("MOC");
+        // const mocFiles = this.app.vault.getMarkdownFiles().filter((f) => {
+        //   const cache = this.app.metadataCache.getFileCache(f);
+        //   return cache?.frontmatter?.tags?.includes("MOC");
+        // });
+        // const file = this.app.metadataCache.getFileCache(mocFiles[0]);
+        // const content = await this.app.vault.read(mocFiles[0]);
+        // const info = getFrontMatterInfo(content);
+        // console.log(file, info);
+        // const contentStart = info.contentStart;
+        // const modifiedContent =
+        //   content.slice(0, contentStart) +
+        //   "hello world\n" +
+        //   content.slice(contentStart);
+        // console.log(modifiedContent);
+        // await this.app.vault.modify(mocFiles[0], modifiedContent);
+
+        // Untitled 6 という名前のファイルを検索し、TFile オブジェクトを取得
+        const file = this.app.vault
+          .getMarkdownFiles()
+          .find((f) => f.basename === "Untitled 6");
+        if (!file) return;
+        await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+          // frontmatter.tags = ["test"];
+          delete frontmatter.tags;
         });
-        const file = this.app.metadataCache.getFileCache(mocFiles[0]);
-        const content = await this.app.vault.read(mocFiles[0]);
-        const info = getFrontMatterInfo(content);
-        console.log(file, info);
-        const contentStart = info.contentStart;
-        const modifiedContent =
-          content.slice(0, contentStart) +
-          "hello world\n" +
-          content.slice(contentStart);
-        console.log(modifiedContent);
-        await this.app.vault.modify(mocFiles[0], modifiedContent);
       },
     });
 
