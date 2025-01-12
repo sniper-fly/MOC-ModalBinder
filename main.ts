@@ -113,35 +113,30 @@ export default class MOCModalBinder extends Plugin {
       onSelect: async (selectedFiles) => {
         if (!file || selectedFiles.length === 0) return;
 
-        try {
-          // Add link to selected MOC files
-          for (const mocFile of selectedFiles) {
-            await this.app.vault.process(mocFile.file, (data) => {
-              if (!data.includes(`[[${file.basename}]]`)) {
-                return data + `\n- [[${file.basename}]]`;
-              }
-              return data;
-            });
-          }
+        // Add link to selected MOC files
+        for (const mocFile of selectedFiles) {
+          await this.app.vault.process(mocFile.file, (data) => {
+            if (!data.includes(`[[${file.basename}]]`)) {
+              return data + `\n- [[${file.basename}]]`;
+            }
+            return data;
+          });
+        }
 
-          // Add tags to new file
-          const allTags = selectedFiles.flatMap((f) => f.tags);
-          const uniqueTags = [...new Set(allTags)];
-          if (uniqueTags.length > 0) {
-            await this.app.vault.process(file, (data) => {
-              // Check if frontmatter already exists
-              const hasFrontmatter = data.startsWith("---");
-              const frontmatter = `---\ntags: [${uniqueTags
-                .map((t) => `"${t}"`)
-                .join(", ")}]\n---\n`;
-
-              return hasFrontmatter
-                ? data.replace(/^---\n([\s\S]*?\n)---\n/, frontmatter)
-                : frontmatter + data;
-            });
-          }
-        } catch (error) {
-          console.error("Error processing files:", error);
+        // Add tags to new file
+        const allTags = selectedFiles.flatMap((f) => f.tags);
+        const uniqueTags = [...new Set(allTags)];
+        if (uniqueTags.length > 0) {
+          await this.app.vault.process(file, (data) => {
+            // Check if frontmatter already exists
+            const hasFrontmatter = data.startsWith("---");
+            const frontmatter = `---\ntags: [${uniqueTags
+              .map((t) => `"${t}"`)
+              .join(", ")}]\n---\n`;
+            return hasFrontmatter
+              ? data.replace(/^---\n([\s\S]*?\n)---\n/, frontmatter)
+              : frontmatter + data;
+          });
         }
       },
       onClose: () => {
