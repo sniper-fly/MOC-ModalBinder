@@ -34,7 +34,10 @@ export default class MOCModalBinder extends Plugin {
       id: "open-moc-selector",
       name: "Open MOC Selector",
       callback: () => {
-        this.openMOCSelector();
+        const activeFile = this.app.workspace.getActiveFile();
+        if (activeFile) {
+          this.openMOCSelector(activeFile);
+        }
       },
     });
 
@@ -77,7 +80,7 @@ export default class MOCModalBinder extends Plugin {
     this.addSettingTab(new MOCModalBinderSettingTab(this.app, this));
   }
 
-  async openMOCSelector(file?: TFile) {
+  async openMOCSelector(file: TFile) {
     // Get all files with MOC tag
     const mocFiles = this.app.vault.getMarkdownFiles().filter((f) => {
       const cache = this.app.metadataCache.getFileCache(f);
@@ -103,13 +106,12 @@ export default class MOCModalBinder extends Plugin {
     new BindModal(this.app, {
       files: mappedFiles,
       onSelect: async (selectedFiles) => {
-        if (!file || selectedFiles.length === 0) return;
+        if (selectedFiles.length === 0) return;
 
         // Add link to selected MOC files
         for (const mocFile of selectedFiles) {
           await insertLink(mocFile.file, file);
         }
-
         // Add tags to new file
         const allTags = selectedFiles.flatMap((f) => f.tags);
         const uniqueTags = [...new Set(allTags)];
@@ -120,7 +122,6 @@ export default class MOCModalBinder extends Plugin {
         });
       },
       onClose: () => {
-        if (!file) return;
         this.app.workspace.getLeaf().openFile(file);
       },
     }).open();
