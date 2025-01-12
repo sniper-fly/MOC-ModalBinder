@@ -11,7 +11,6 @@ type MOCFile = {
 type ReactModalProps = {
   files: MOCFile[];
   onSelect: (selectedFiles: MOCFile[]) => void;
-  onClose: () => void;
 };
 
 export class BindModal extends Modal {
@@ -35,7 +34,7 @@ export class BindModal extends Modal {
   }
 }
 
-function ReactModal({ files, onSelect, onClose }: ReactModalProps) {
+function ReactModal({ files, onSelect }: ReactModalProps) {
   const [filter, setFilter] = useState("");
   const [filteredFiles, setFilteredFiles] = useState(files);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -45,11 +44,9 @@ function ReactModal({ files, onSelect, onClose }: ReactModalProps) {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case "ArrowUp":
-        case "k":
           setSelectedIndex((prev) => Math.max(0, prev - 1));
           break;
         case "ArrowDown":
-        case "j":
           setSelectedIndex((prev) =>
             Math.min(filteredFiles.length - 1, prev + 1)
           );
@@ -65,9 +62,6 @@ function ReactModal({ files, onSelect, onClose }: ReactModalProps) {
         case "Enter":
           onSelect(filteredFiles.filter((f) => f.selected));
           break;
-        case "Escape":
-          onClose();
-          break;
         default:
           break;
       }
@@ -75,7 +69,7 @@ function ReactModal({ files, onSelect, onClose }: ReactModalProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [filteredFiles, selectedIndex, onSelect, onClose]);
+  }, [filteredFiles, selectedIndex, onSelect]);
 
   // Update filtered files when filter changes
   useEffect(() => {
@@ -111,13 +105,13 @@ function ReactModal({ files, onSelect, onClose }: ReactModalProps) {
               }}
             />
             <span>{f.file.name}</span>
-            <div className="tags">
+            {/* <div className="tags">
               {f.tags.map((t) => (
                 <span key={t} className="tag">
                   {t}
                 </span>
               ))}
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

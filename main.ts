@@ -118,9 +118,6 @@ export default class MOCModalBinder extends Plugin {
           frontmatter.tags = uniqueTags;
         });
       },
-      onClose: () => {
-        this.app.workspace.getLeaf().openFile(file);
-      },
     }).open();
   }
 
