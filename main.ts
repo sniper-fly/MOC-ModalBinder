@@ -97,7 +97,7 @@ export default class MOCModalBinder extends Plugin {
                   .join(", ")}]\n---\n`;
 
                 return hasFrontmatter
-                  ? data.replace(/^---\n(.*?\n)---\n/s, frontmatter)
+                  ? data.replace(/^---\n([\s\S]*?\n)---\n/, frontmatter)
                   : frontmatter + data;
               });
             }
@@ -106,9 +106,8 @@ export default class MOCModalBinder extends Plugin {
           }
         },
         onClose: () => {
-          if (file) {
-            this.app.workspace.getLeaf().openFile(file);
-          }
+          if (!file) return;
+          this.app.workspace.getLeaf().openFile(file);
         },
       }).open();
     } catch (error) {
