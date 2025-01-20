@@ -35,8 +35,8 @@ export class BindModal extends Modal {
 }
 
 function ReactModal({ files, onSelect }: ReactModalProps) {
-  const [filter, setFilter] = useState("");
-  const [filteredFiles, setFilteredFiles] = useState(files);
+  const [searchWord, setSearchWord] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState(files);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Handle keyboard navigation
@@ -48,11 +48,11 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
           break;
         case "ArrowDown":
           setSelectedIndex((prev) =>
-            Math.min(filteredFiles.length - 1, prev + 1)
+            Math.min(selectedFiles.length - 1, prev + 1)
           );
           break;
         case " ":
-          setFilteredFiles((prev) => {
+          setSelectedFiles((prev) => {
             const newFiles = [...prev];
             newFiles[selectedIndex].selected =
               !newFiles[selectedIndex].selected;
@@ -60,7 +60,7 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
           });
           break;
         case "Enter":
-          onSelect(filteredFiles.filter((f) => f.selected));
+          onSelect(selectedFiles.filter((f) => f.selected));
           break;
         default:
           break;
@@ -69,28 +69,28 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [filteredFiles, selectedIndex, onSelect]);
+  }, [selectedFiles, selectedIndex, onSelect]);
 
   // Update filtered files when filter changes
   useEffect(() => {
-    setFilteredFiles(
+    setSelectedFiles(
       files.filter((f) =>
-        f.file.name.toLowerCase().includes(filter.toLowerCase())
+        f.file.name.toLowerCase().includes(searchWord.toLowerCase())
       )
     );
-  }, [filter, files]);
+  }, [searchWord, files]);
 
   return (
     <div className="moc-modal">
       <input
         type="text"
         placeholder="Filter MOC files..."
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
+        value={searchWord}
+        onChange={(e) => setSearchWord(e.target.value)}
         autoFocus
       />
       <div className="moc-list">
-        {filteredFiles.map((f, i) => (
+        {selectedFiles.map((f, i) => (
           <div
             key={f.file.path}
             className={`moc-item ${i === selectedIndex ? "is-selected" : ""}`}
@@ -99,9 +99,9 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
               type="checkbox"
               checked={f.selected}
               onChange={() => {
-                const newFiles = [...filteredFiles];
+                const newFiles = [...selectedFiles];
                 newFiles[i].selected = !newFiles[i].selected;
-                setFilteredFiles(newFiles);
+                setSelectedFiles(newFiles);
               }}
             />
             <span>{f.file.name}</span>
