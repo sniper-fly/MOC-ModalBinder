@@ -70,14 +70,17 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [selectedFiles]);
 
-  const searchResults =
-    searchWord === ""
-      ? files
-      : files.filter((f) =>
-          f.file.name.toLowerCase().includes(searchWord.toLowerCase())
-        );
+  // Update filtered files when filter changes
+  useEffect(() => {
+    setSelectedFiles(
+      files.filter((f) =>
+        f.file.name.toLowerCase().includes(searchWord.toLowerCase())
+      )
+    );
+    setHighlightedIndex(0);
+  }, [searchWord, files]);
 
   return (
     <div className="moc-modal">
@@ -89,10 +92,12 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
         autoFocus
       />
       <div className="moc-list">
-        {searchResults.map((f, i) => (
+        {selectedFiles.map((f, i) => (
           <div
             key={f.file.path}
-            className={`moc-item ${i === highlightedIndex ? "is-selected" : ""}`}
+            className={`moc-item ${
+              i === highlightedIndex ? "is-selected" : ""
+            }`}
           >
             <input
               type="checkbox"
