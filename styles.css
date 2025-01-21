@@ -6,3 +6,17 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.moc-modal .moc-item.is-selected {
+  background-color: var(--background-modifier-hover);
+  border-radius: 4px;
+  border: 1px solid var(--interactive-accent);
+}
+
+.moc-modal .moc-item {
+  padding: 4px 8px;
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
