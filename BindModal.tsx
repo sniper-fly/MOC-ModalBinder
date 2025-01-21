@@ -37,17 +37,17 @@ export class BindModal extends Modal {
 function ReactModal({ files, onSelect }: ReactModalProps) {
   const [searchWord, setSearchWord] = useState("");
   const [selectedFiles, setSelectedFiles] = useState(files);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
 
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case "ArrowUp":
-          setSelectedIndex((prev) => Math.max(0, prev - 1));
+          setHighlightedIndex((prev) => Math.max(0, prev - 1));
           break;
         case "ArrowDown":
-          setSelectedIndex((prev) =>
+          setHighlightedIndex((prev) =>
             Math.min(selectedFiles.length - 1, prev + 1)
           );
           break;
@@ -58,8 +58,8 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
           } else {
             setSelectedFiles((prev) => {
               const newFiles = [...prev];
-              newFiles[selectedIndex].selected =
-                !newFiles[selectedIndex].selected;
+              newFiles[highlightedIndex].selected =
+                !newFiles[highlightedIndex].selected;
               return newFiles;
             });
           }
@@ -92,7 +92,7 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
         {searchResults.map((f, i) => (
           <div
             key={f.file.path}
-            className={`moc-item ${i === selectedIndex ? "is-selected" : ""}`}
+            className={`moc-item ${i === highlightedIndex ? "is-selected" : ""}`}
           >
             <input
               type="checkbox"
