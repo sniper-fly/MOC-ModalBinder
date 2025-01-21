@@ -51,16 +51,18 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
             Math.min(selectedFiles.length - 1, prev + 1)
           );
           break;
-        case " ":
-          setSelectedFiles((prev) => {
-            const newFiles = [...prev];
-            newFiles[selectedIndex].selected =
-              !newFiles[selectedIndex].selected;
-            return newFiles;
-          });
-          break;
         case "Enter":
-          onSelect(selectedFiles.filter((f) => f.selected));
+          // Ctrl + Enter
+          if (e.ctrlKey) {
+            onSelect(selectedFiles.filter((f) => f.selected));
+          } else {
+            setSelectedFiles((prev) => {
+              const newFiles = [...prev];
+              newFiles[selectedIndex].selected =
+                !newFiles[selectedIndex].selected;
+              return newFiles;
+            });
+          }
           break;
         default:
           break;
@@ -69,7 +71,7 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedFiles, selectedIndex, onSelect]);
+  }, []);
 
   // Update filtered files when filter changes
   useEffect(() => {
@@ -97,7 +99,7 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
           >
             <input
               type="checkbox"
-              checked={f.selected}
+              checked={selectedFiles[i].selected}
               onChange={() => {
                 const newFiles = [...selectedFiles];
                 newFiles[i].selected = !newFiles[i].selected;
