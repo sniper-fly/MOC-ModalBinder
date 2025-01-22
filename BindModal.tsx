@@ -86,6 +86,7 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
         value={searchWord}
         onChange={(e) => setSearchWord(e.target.value)}
         autoFocus
+        style={{ width: "100%" }}
       />
       <div className="moc-list">
         {selectedFiles.map((f, i) => (
@@ -115,6 +116,22 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
             </div> */}
           </div>
         ))}
+      </div>
+      <div
+        style={{
+          borderTop: "1px solid var(--background-modifier-border)",
+          paddingTop: "8px",
+          marginTop: "8px",
+          fontSize: "12px",
+          color: "var(--text-muted)",
+          display: "flex",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <span>↓↑ to navigate </span>
+        <span> ↴ to select toggle</span>
+        <span>Ctrl + ↴ to apply </span>
+        <span> Esc to close</span>
       </div>
     </div>
   );
