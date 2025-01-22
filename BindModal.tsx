@@ -95,8 +95,6 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
           style={{
             width: "100%",
             backgroundColor: "var(--background-primary)",
-            border: "none",
-            outline: "none",
           }}
         />
       </div>
