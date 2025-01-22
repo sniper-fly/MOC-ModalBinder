@@ -80,14 +80,26 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
 
   return (
     <div className="moc-modal">
-      <input
-        type="text"
-        placeholder="Filter MOC files..."
-        value={searchWord}
-        onChange={(e) => setSearchWord(e.target.value)}
-        autoFocus
-        style={{ width: "100%" }}
-      />
+      <div
+        style={{
+          paddingTop: "8px",
+          paddingBottom: "8px",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Filter MOC files..."
+          value={searchWord}
+          onChange={(e) => setSearchWord(e.target.value)}
+          autoFocus
+          style={{
+            width: "100%",
+            backgroundColor: "var(--background-primary)",
+            border: "none",
+            outline: "none",
+          }}
+        />
+      </div>
       <div className="moc-list">
         {selectedFiles.map((f, i) => (
           <div
@@ -107,13 +119,6 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
               }}
             />
             <span>{f.file.name}</span>
-            {/* <div className="tags">
-              {f.tags.map((t) => (
-                <span key={t} className="tag">
-                  {t}
-                </span>
-              ))}
-            </div> */}
           </div>
         ))}
       </div>
@@ -128,10 +133,10 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
           justifyContent: "space-evenly",
         }}
       >
-        <span>↓↑ to navigate </span>
-        <span> ↴ to select toggle</span>
-        <span>Ctrl + ↴ to apply </span>
-        <span> Esc to close</span>
+        <span>↓↑ navigate </span>
+        <span> ↴ select toggle</span>
+        <span>Ctrl + ↴ apply </span>
+        <span> Esc close</span>
       </div>
     </div>
   );
