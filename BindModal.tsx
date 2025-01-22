@@ -118,7 +118,7 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
                 setSelectedFiles(newFiles);
               }}
             />
-            <span>{f.file.name}</span>
+            <span>{f.file.name.replace(/\.md$/, "")}</span>
           </div>
         ))}
       </div>
