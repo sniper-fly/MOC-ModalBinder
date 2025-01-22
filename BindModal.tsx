@@ -11,12 +11,13 @@ type MOCFile = {
 type ReactModalProps = {
   files: MOCFile[];
   onSelect: (selectedFiles: MOCFile[]) => void;
+  close: () => void;
 };
 
 export class BindModal extends Modal {
   root: Root | null = null;
 
-  constructor(app: App, public props: ReactModalProps) {
+  constructor(app: App, public props: Omit<ReactModalProps, "close">) {
     super(app);
   }
 
@@ -24,7 +25,7 @@ export class BindModal extends Modal {
     this.root = createRoot(this.contentEl.createDiv());
     this.root.render(
       <StrictMode>
-        <ReactModal {...this.props} />
+        <ReactModal {...this.props} close={() => this.close()} />
       </StrictMode>
     );
   }
@@ -34,7 +35,7 @@ export class BindModal extends Modal {
   }
 }
 
-function ReactModal({ files, onSelect }: ReactModalProps) {
+function ReactModal({ files, onSelect, close }: ReactModalProps) {
   const [searchWord, setSearchWord] = useState("");
   const [selectedFiles, setSelectedFiles] = useState(files);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -56,6 +57,7 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
           // Ctrl + Enter
           if (e.ctrlKey) {
             onSelect(selectedFiles.filter((f) => f.selected));
+            close();
           } else {
             inputRef.current?.click();
           }
