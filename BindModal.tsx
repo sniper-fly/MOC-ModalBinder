@@ -1,4 +1,4 @@
-import { useState, useEffect, StrictMode } from "react";
+import { useState, useEffect, StrictMode, useRef } from "react";
 import { App, Modal, TFile } from "obsidian";
 import { createRoot, Root } from "react-dom/client";
 
@@ -38,10 +38,11 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
   const [searchWord, setSearchWord] = useState("");
   const [selectedFiles, setSelectedFiles] = useState(files);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Handle keyboard navigation
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    function handleKeyDown(e: KeyboardEvent) {
       switch (e.key) {
         case "ArrowUp":
           setHighlightedIndex((prev) => Math.max(0, prev - 1));
@@ -56,18 +57,13 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
           if (e.ctrlKey) {
             onSelect(selectedFiles.filter((f) => f.selected));
           } else {
-            setSelectedFiles((prev) => {
-              const newFiles = [...prev];
-              newFiles[highlightedIndex].selected =
-                !newFiles[highlightedIndex].selected;
-              return newFiles;
-            });
+            inputRef.current?.click();
           }
           break;
         default:
           break;
       }
-    };
+    }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedFiles]);
@@ -102,6 +98,7 @@ function ReactModal({ files, onSelect }: ReactModalProps) {
             <input
               type="checkbox"
               checked={selectedFiles[i].selected}
+              ref={i === highlightedIndex ? inputRef : null}
               onChange={() => {
                 const newFiles = [...selectedFiles];
                 newFiles[i].selected = !newFiles[i].selected;
