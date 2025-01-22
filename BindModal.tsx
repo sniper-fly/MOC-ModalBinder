@@ -2,7 +2,7 @@ import { useState, useEffect, StrictMode, useRef } from "react";
 import { App, Modal, TFile } from "obsidian";
 import { createRoot, Root } from "react-dom/client";
 
-type MOCFile = {
+export type MOCFile = {
   file: TFile;
   tags: string[];
   selected: boolean;

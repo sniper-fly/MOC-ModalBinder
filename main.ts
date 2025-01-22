@@ -1,19 +1,6 @@
-import {
-  App,
-  Plugin,
-  PluginSettingTab,
-  Setting,
-  TFile,
-  getFrontMatterInfo,
-} from "obsidian";
-import { BindModal } from "./BindModal";
+import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
+import { BindModal, MOCFile } from "./BindModal";
 import { insertLink } from "insertLink";
-
-type MOCFile = {
-  file: TFile;
-  tags: string[];
-  selected: boolean;
-};
 
 type MOCModalBinderSettings = {
   autoBind: boolean;
@@ -41,40 +28,14 @@ export default class MOCModalBinder extends Plugin {
       },
     });
 
-    this.addCommand({
-      id: "test",
-      name: "Test",
-      callback: async () => {
-        console.log("Test");
-        // const mocFiles = this.app.vault.getMarkdownFiles().filter((f) => {
-        //   const cache = this.app.metadataCache.getFileCache(f);
-        //   return cache?.frontmatter?.tags?.includes("MOC");
-        // });
-
-        // Untitled 6 という名前のファイルを検索し、TFile オブジェクトを取得
-        const file = this.app.vault
-          .getMarkdownFiles()
-          .find((f) => f.basename === "Untitled 6");
-        if (!file) return;
-        insertLink(file, file);
-
-        // await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-        //   // frontmatter.tags = ["test"];
-        //   delete frontmatter.tags;
-        // });
-      },
-    });
-
     // Register file creation event handler if autoBind is enabled
-    if (this.settings.autoBind) {
-      this.registerEvent(
-        this.app.vault.on("create", (file) => {
-          if (file instanceof TFile) {
-            this.openMOCSelector(file);
-          }
-        })
-      );
-    }
+    this.registerEvent(
+      this.app.vault.on("create", (file) => {
+        if (file instanceof TFile && this.settings.autoBind === true) {
+          this.openMOCSelector(file);
+        }
+      })
+    );
 
     // Add settings tab
     this.addSettingTab(new MOCModalBinderSettingTab(this.app, this));
@@ -147,7 +108,7 @@ class MOCModalBinderSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Auto Bind")
-      .setDesc("Automatically show MOC selector when creating new files")
+      .setDesc("Automatically show MOC selector modal when creating new files")
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.autoBind)
