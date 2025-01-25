@@ -97,13 +97,13 @@ function ReactModal({
         <div
           style={{
             fontSize: "16px",
-            fontWeight: "bold",
             marginBottom: "8px",
             color: "var(--text-normal)",
             textAlign: "center",
           }}
         >
-          {targetFilename}
+          Select MOCs to backlink for:
+          <span style={{ fontWeight: "bold" }}> {targetFilename} </span>
         </div>
         <input
           type="text"
