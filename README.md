@@ -1,6 +1,9 @@
 # MOC Modal Binder - Obsidian Plugin
 
-A plugin for Obsidian that helps you organize your notes by automatically linking new files to MOC (Map of Content) files and inheriting tags.
+A plugin for Obsidian that helps you organize your notes by automatically linking new files to MOC (Map of Content) files and inheriting tags. This plugin is inspired by the LYT (Linking Your Thinking) method, which uses MOCs as "linking hubs" to connect related notes.
+
+Learn more about LYT and MOCs:
+- [MOCs Overview - LYT Kit](https://notes.linkingyourthinking.com/Cards/MOCs+Overview)
 
 ## Features
 

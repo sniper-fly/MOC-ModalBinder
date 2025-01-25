@@ -1,6 +1,9 @@
 # MOC Modal Binder - Obsidianプラグイン
 
-Obsidianのためのプラグインで、新規ファイルをMOC（Map of Content）ファイルに自動的にリンクし、タグを継承する機能を提供します。
+Obsidianのためのプラグインで、新規ファイルをMOC（Map of Content）ファイルに自動的にリンクし、タグを継承する機能を提供します。このプラグインはLYT（Linking Your Thinking）メソッドにインスパイアされており、MOCを「リンクハブ」として使用して関連するノートを接続します。
+
+LYTとMOCについて詳しく知る：
+- [MOCs Overview - LYT Kit](https://notes.linkingyourthinking.com/Cards/MOCs+Overview)
 
 ## 機能
 
@@ -24,7 +27,7 @@ Obsidianのためのプラグインで、新規ファイルをMOC（Map of Conte
 
 ## 使い方
 
-1. **MOCファイル**:
+1. **MOCファイルの設定**:
    - MOCとして使用したいファイルのフロントマターに`MOC`タグを追加
    - 例：
      ```markdown
