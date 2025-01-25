@@ -1,4 +1,11 @@
-import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
+import {
+  App,
+  Plugin,
+  PluginSettingTab,
+  Setting,
+  TFile,
+  Notice,
+} from "obsidian";
 import { BindModal, MOCFile } from "./BindModal";
 import { insertLink } from "insertLink";
 
@@ -25,6 +32,16 @@ export default class MOCModalBinder extends Plugin {
         if (activeFile) {
           this.openMOCSelector(activeFile);
         }
+      },
+    });
+
+    this.addCommand({
+      id: "toggle-auto-bind",
+      name: "Toggle Auto Bind",
+      callback: () => {
+        this.settings.autoBind = !this.settings.autoBind;
+        this.saveSettings();
+        new Notice(`Auto Bind is now ${this.settings.autoBind ? "ON" : "OFF"}`);
       },
     });
 
