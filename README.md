@@ -24,14 +24,23 @@ A plugin for Obsidian that helps you organize your notes by automatically linkin
 
 ## Usage
 
-1. **For new files**:
+1. **For MOC files**:
+   - Add `MOC` tag in the frontmatter of files you want to use as MOC files
+   - Example:
+     ```markdown
+     ---
+     tags: [MOC, topic1, topic2]
+     ---
+     ```
+
+2. **For new files**:
    - Create a new file
    - Select MOC files to link to in the modal
    - The new file will:
      - Be linked from selected MOC files
      - Inherit tags from selected MOC files (excluding the MOC tag itself)
 
-2. **For existing files**:
+3. **For existing files**:
    - Use the "Open MOC Selector" command from the command palette
    - Select MOC files to link to the currently active file
 
