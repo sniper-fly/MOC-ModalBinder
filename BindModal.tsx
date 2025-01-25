@@ -12,6 +12,7 @@ type ReactModalProps = {
   files: MOCFile[];
   onSelect: (selectedFiles: MOCFile[]) => void;
   close: () => void;
+  targetFilename: string;
 };
 
 export class BindModal extends Modal {
@@ -35,7 +36,12 @@ export class BindModal extends Modal {
   }
 }
 
-function ReactModal({ files, onSelect, close }: ReactModalProps) {
+function ReactModal({
+  files,
+  onSelect,
+  close,
+  targetFilename,
+}: ReactModalProps) {
   const [searchWord, setSearchWord] = useState("");
   const [selectedFiles, setSelectedFiles] = useState(files);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -88,6 +94,17 @@ function ReactModal({ files, onSelect, close }: ReactModalProps) {
           paddingBottom: "8px",
         }}
       >
+        <div
+          style={{
+            fontSize: "16px",
+            fontWeight: "bold",
+            marginBottom: "8px",
+            color: "var(--text-normal)",
+            textAlign: "center",
+          }}
+        >
+          {targetFilename}
+        </div>
         <input
           type="text"
           placeholder="Filter MOC files..."

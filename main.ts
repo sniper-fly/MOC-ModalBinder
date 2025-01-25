@@ -96,6 +96,7 @@ export default class MOCModalBinder extends Plugin {
           frontmatter.tags = uniqueTags;
         });
       },
+      targetFilename: file.basename,
     }).open();
   }
 
