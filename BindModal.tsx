@@ -150,10 +150,18 @@ function ReactModal({
           justifyContent: "space-evenly",
         }}
       >
-        <span>↓↑ navigate </span>
-        <span> ↴ select toggle</span>
-        <span>Ctrl + ↴ apply </span>
-        <span> Esc close</span>
+        <span>
+          <strong>↓↑</strong> navigate
+        </span>
+        <span>
+          <strong>↵</strong> select toggle
+        </span>
+        <span>
+          <strong>Ctrl + ↵</strong> apply
+        </span>
+        <span>
+          <strong>Esc</strong> close
+        </span>
       </div>
     </div>
   );
