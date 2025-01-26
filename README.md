@@ -1,3 +1,5 @@
+[README.ja.md](./README.ja.md)
+
 # MOC Modal Binder - Obsidian Plugin
 
 https://github.com/user-attachments/assets/c3438642-1db6-4eb0-8021-59195745679c
