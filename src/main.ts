@@ -7,7 +7,7 @@ import {
   Notice,
 } from "obsidian";
 import { BindModal, MOCFile } from "./BindModal";
-import { insertLink } from "insertLink";
+import { insertLink } from "./insertLink";
 
 type MOCModalBinderSettings = {
   autoBind: boolean;
