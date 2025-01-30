@@ -42,8 +42,8 @@ function ReactModal({
   close,
   targetFilename,
 }: ReactModalProps) {
-  const [mocFiles, setMOCFiles] = useState<MOCFile[]>([]);
-  const [filteredFiles, setFilteredFiles] = useState(files);
+  const [searchWord, setSearchWord] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState(files);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -59,7 +59,7 @@ function ReactModal({
           break;
         case "ArrowDown":
           setHighlightedIndex((prev) =>
-            Math.min(filteredFiles.length - 1, prev + 1)
+            Math.min(selectedFiles.length - 1, prev + 1)
           );
           break;
         case "Enter":
@@ -77,24 +77,25 @@ function ReactModal({
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [filteredFiles]);
+  }, [selectedFiles]);
 
-  function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setFilteredFiles(
+  // Update filtered files when filter changes
+  useEffect(() => {
+    setSelectedFiles(
       files.filter((f) =>
-        f.file.name.toLowerCase().includes(e.target.value.toLowerCase())
+        f.file.name.toLowerCase().includes(searchWord.toLowerCase())
       )
     );
     setHighlightedIndex(0);
-  }
+  }, [searchWord, files]);
 
   // 選択解除用の関数を追加
-  function handleUnselectMOC(filePath: string) {
-    const newFiles = filteredFiles.map((f) =>
+  const handleUnselectMOC = (filePath: string) => {
+    const newFiles = selectedFiles.map((f) =>
       f.file.path === filePath ? { ...f, selected: false } : f
     );
-    setFilteredFiles(newFiles);
-  }
+    setSelectedFiles(newFiles);
+  };
 
   return (
     <div className="moc-modal">
@@ -118,7 +119,8 @@ function ReactModal({
         <input
           type="text"
           placeholder="Filter MOC files..."
-          onChange={(e) => handleSearchChange(e)}
+          value={searchWord}
+          onChange={(e) => setSearchWord(e.target.value)}
           autoFocus
           style={{
             width: "100%",
@@ -182,23 +184,23 @@ function ReactModal({
         )}
       </div>
       <div className="moc-list">
-        {filteredFiles.map((f, i) => (
+        {selectedFiles.map((f, i) => (
           <div
             key={f.file.path}
             className={`moc-item ${
               i === highlightedIndex ? "is-selected" : ""
             }`}
             onClick={() => {
-              const newFiles = [...filteredFiles];
+              const newFiles = [...selectedFiles];
               // ここで元ファイルのselectedを参照しているため、mutationが発生している
               newFiles[i].selected = !newFiles[i].selected;
-              setFilteredFiles(newFiles);
+              setSelectedFiles(newFiles);
             }}
             style={{ cursor: "pointer" }}
           >
             <input
               type="checkbox"
-              checked={filteredFiles[i].selected}
+              checked={selectedFiles[i].selected}
               ref={i === highlightedIndex ? inputRef : null}
             />
             <span>{f.file.name.replace(/\.md$/, "")}</span>
