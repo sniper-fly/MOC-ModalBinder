@@ -35,16 +35,6 @@ export default class MOCModalBinder extends Plugin {
       },
     });
 
-    this.addCommand({
-      id: "toggle-auto-bind",
-      name: "Toggle Auto Bind",
-      callback: () => {
-        this.settings.autoBind = !this.settings.autoBind;
-        this.saveSettings();
-        new Notice(`Auto Bind is now ${this.settings.autoBind ? "ON" : "OFF"}`);
-      },
-    });
-
     // Register file creation event handler if autoBind is enabled
     this.registerEvent(
       this.app.vault.on("create", (file) => {
