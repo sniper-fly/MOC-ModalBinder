@@ -154,17 +154,18 @@ function ReactModal({
             className={`moc-item ${
               i === highlightedIndex ? "is-selected" : ""
             }`}
+            onClick={() => {
+              const newFiles = [...selectedFiles];
+              // ここで元ファイルのselectedを参照しているため、mutationが発生している
+              newFiles[i].selected = !newFiles[i].selected;
+              setSelectedFiles(newFiles);
+            }}
+            style={{ cursor: "pointer" }}
           >
             <input
               type="checkbox"
               checked={selectedFiles[i].selected}
               ref={i === highlightedIndex ? inputRef : null}
-              onChange={() => {
-                const newFiles = [...selectedFiles];
-                // ここで元ファイルのselectedを参照しているため、mutationが発生している
-                newFiles[i].selected = !newFiles[i].selected;
-                setSelectedFiles(newFiles);
-              }}
             />
             <span>{f.file.name.replace(/\.md$/, "")}</span>
           </div>
