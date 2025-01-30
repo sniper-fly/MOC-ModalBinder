@@ -47,6 +47,9 @@ function ReactModal({
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // 選択されているファイルを取得
+  const selectedMOCs = files.filter((f) => f.selected);
+
   // Handle keyboard navigation
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -114,8 +117,35 @@ function ReactModal({
           style={{
             width: "100%",
             backgroundColor: "var(--background-primary)",
+            marginBottom: selectedMOCs.length > 0 ? "8px" : "0",
           }}
         />
+        {selectedMOCs.length > 0 && (
+          <div
+            style={{
+              marginBottom: "8px",
+              padding: "8px",
+              backgroundColor: "var(--background-secondary)",
+              borderRadius: "4px",
+            }}
+          >
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+              {selectedMOCs.map((f) => (
+                <div
+                  key={f.file.path}
+                  style={{
+                    backgroundColor: "var(--background-modifier-success)",
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    fontSize: "12px",
+                  }}
+                >
+                  {f.file.name.replace(/\.md$/, "")}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div className="moc-list">
         {selectedFiles.map((f, i) => (
