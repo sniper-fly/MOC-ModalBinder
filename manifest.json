@@ -1,7 +1,7 @@
 {
   "id": "moc-modal-binder",
   "name": "MOC Modal Binder",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "minAppVersion": "0.15.0",
   "description": "Show modal before creating new file to bind notes and MOC",
   "author": "sniper-fly",
