@@ -81,9 +81,10 @@ export default class MOCModalBinder extends Plugin {
         }
         // Add tags to new file
         const allTags = selectedFiles.flatMap((f) => f.tags);
-        const uniqueTags = [...new Set(allTags)];
 
         await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+          const currentTags = frontmatter.tags || [];
+          const uniqueTags = [...new Set([...currentTags, ...allTags])];
           frontmatter.tags = uniqueTags;
         });
       },
