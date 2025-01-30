@@ -89,14 +89,6 @@ function ReactModal({
     setHighlightedIndex(0);
   }, [searchWord, files]);
 
-  // 選択解除用の関数を追加
-  const handleUnselectMOC = (filePath: string) => {
-    const newFiles = selectedFiles.map((f) =>
-      f.file.path === filePath ? { ...f, selected: false } : f
-    );
-    setSelectedFiles(newFiles);
-  };
-
   return (
     <div className="moc-modal">
       <div
@@ -144,39 +136,11 @@ function ReactModal({
                   style={{
                     backgroundColor: "var(--background-modifier-success)",
                     padding: "2px 6px",
-                    paddingRight: "2px",
                     borderRadius: "4px",
                     fontSize: "12px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
                   }}
                 >
-                  <span>{f.file.name.replace(/\.md$/, "")}</span>
-                  <button
-                    style={{
-                      border: "none",
-                      background: "transparent",
-                      padding: "2px 4px",
-                      cursor: "pointer",
-                      borderRadius: "2px",
-                      display: "flex",
-                      alignItems: "center",
-                      fontSize: "10px",
-                    }}
-                    onClick={(e) => {
-                      handleUnselectMOC(f.file.path);
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "var(--background-modifier-error)";
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.backgroundColor = "transparent";
-                    }}
-                  >
-                    ✕
-                  </button>
+                  {f.file.name.replace(/\.md$/, "")}
                 </div>
               ))}
             </div>
