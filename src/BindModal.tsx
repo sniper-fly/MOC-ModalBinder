@@ -10,7 +10,7 @@ export type MOCFile = {
 
 type ReactModalProps = {
   files: MOCFile[];
-  onSelect: (selectedFiles: MOCFile[]) => void;
+  onSelect: () => void;
   close: () => void;
   targetFilename: string;
 };
@@ -62,7 +62,7 @@ function ReactModal({
         case "Enter":
           // Ctrl + Enter
           if (e.ctrlKey) {
-            onSelect(selectedFiles.filter((f) => f.selected));
+            onSelect();
             close();
           } else {
             inputRef.current?.click();
@@ -131,6 +131,7 @@ function ReactModal({
               ref={i === highlightedIndex ? inputRef : null}
               onChange={() => {
                 const newFiles = [...selectedFiles];
+                // ここで元ファイルのselectedを参照しているため、mutationが発生している
                 newFiles[i].selected = !newFiles[i].selected;
                 setSelectedFiles(newFiles);
               }}

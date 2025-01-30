@@ -73,7 +73,8 @@ export default class MOCModalBinder extends Plugin {
 
     new BindModal(this.app, {
       files: mappedFiles,
-      onSelect: async (selectedFiles) => {
+      onSelect: async () => {
+        const selectedFiles = mappedFiles.filter((f) => f.selected);
         // Add link to selected MOC files
         for (const mocFile of selectedFiles) {
           await insertLink(mocFile.file, file);
